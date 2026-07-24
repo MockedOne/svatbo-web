@@ -1,362 +1,373 @@
-<!DOCTYPE HTML>
-<!--
-	Dimension by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Dimension by HTML5 UP</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRG → SJO · Odpočet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#0f1420;
+    --night-2:#161d30;
+    --board:#1b2338;
+    --parchment:#f2ecd8;
+    --ink:#1c2540;
+    --gold:#d4a24c;
+    --teal:#5c8b93;
+    --rust:#b8532e;
+    --line: rgba(242,236,216,0.14);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at 20% -10%, #202b46 0%, transparent 55%),
+      radial-gradient(ellipse at 90% 110%, #1a2a2c 0%, transparent 55%),
+      var(--night);
+    color:var(--parchment);
+    font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh;
+    padding:48px 20px 80px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
 
-		<!-- Wrapper -->
-			<div id="wrapper">
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:var(--teal);
+    text-align:center;
+    margin-bottom:10px;
+  }
+  h1{
+    font-family:'IBM Plex Sans Condensed', sans-serif;
+    font-weight:700;
+    text-align:center;
+    font-size:clamp(28px,5vw,44px);
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+  }
+  .route-line{
+    text-align:center;
+    font-family:'Space Mono', monospace;
+    color:var(--gold);
+    font-size:15px;
+    margin-bottom:38px;
+    letter-spacing:.04em;
+  }
+  .route-line .code{color:var(--parchment); font-weight:700;}
 
-				<!-- Header -->
-					<header id="header">
-						<div class="logo">
-							<span class="icon fa-gem"></span>
-						</div>
-						<div class="content">
-							<div class="inner">
-								<h1>Dimension</h1>
-								<p>A fully responsive site template designed by <a href="https://html5up.net">HTML5 UP</a> and released<br />
-								for free under the <a href="https://html5up.net/license">Creative Commons</a> license.</p>
-							</div>
-						</div>
-						<nav>
-							<ul>
-								<li><a href="#intro">Intro</a></li>
-								<li><a href="#work">Work</a></li>
-								<li><a href="#about">About</a></li>
-								<li><a href="#contact">Contact</a></li>
-								<!--<li><a href="#elements">Elements</a></li>-->
-							</ul>
-						</nav>
-					</header>
+  /* --- SPLIT FLAP BOARD --- */
+  .board{
+    background:var(--board);
+    border:1px solid rgba(242,236,216,0.08);
+    border-radius:14px;
+    padding:26px 22px 22px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+    margin-bottom:34px;
+  }
+  .board-caption{
+    text-align:center;
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    color:var(--teal);
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  .flap-row{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .flap-unit{display:flex; flex-direction:column; align-items:center; gap:10px;}
+  .flap-digits{display:flex; gap:4px;}
+  .flap{
+    position:relative;
+    width:46px;
+    height:64px;
+    background:#0c0f18;
+    border-radius:5px;
+    overflow:hidden;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06), 0 3px 8px rgba(0,0,0,0.5);
+  }
+  .flap::after{
+    content:'';
+    position:absolute;
+    top:50%; left:0; right:0;
+    height:1px;
+    background:rgba(0,0,0,0.55);
+    z-index:3;
+  }
+  .flap .digit{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Space Mono',monospace;
+    font-size:34px;
+    font-weight:700;
+    color:var(--parchment);
+    background:linear-gradient(#171f30,#11162200 40%);
+  }
+  .flap-label{
+    font-family:'Space Mono',monospace;
+    font-size:10px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:var(--teal);
+  }
+  .flap-colon{
+    align-self:flex-start;
+    margin-top:20px;
+    font-family:'Space Mono',monospace;
+    font-size:28px;
+    color:var(--teal);
+    opacity:.5;
+  }
+  .board-status{
+    text-align:center;
+    margin-top:20px;
+    font-family:'Space Mono',monospace;
+    font-size:13px;
+    color:var(--gold);
+    letter-spacing:.04em;
+  }
 
-				<!-- Main -->
-					<div id="main">
+  /* --- LEG TICKETS --- */
+  .legs{ display:flex; flex-direction:column; gap:18px; }
+  .ticket{
+    display:grid;
+    grid-template-columns: 1fr 118px;
+    background:var(--parchment);
+    color:var(--ink);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow: 0 18px 40px -18px rgba(0,0,0,0.5);
+    position:relative;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .ticket.active{ transform: translateY(-2px); box-shadow: 0 22px 46px -16px rgba(212,162,76,0.35), 0 0 0 1.5px var(--gold); }
+  .ticket.done{ opacity:.46; }
+  .ticket-main{ padding:18px 20px; }
+  .ticket-num{
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--rust);
+    margin-bottom:8px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .ticket-num .pip{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--rust); display:inline-block;
+  }
+  .ticket.active .ticket-num{ color:#8a5b1e; }
+  .ticket.active .pip{ background:var(--gold); }
+  .ticket-route{
+    display:flex; align-items:baseline; gap:12px;
+    font-family:'IBM Plex Sans Condensed', sans-serif;
+    font-weight:700;
+    font-size:26px;
+  }
+  .ticket-route .arrow{ font-size:16px; color:var(--teal); font-weight:400; }
+  .ticket-meta{
+    margin-top:8px;
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    color:#5a5240;
+  }
+  .ticket-stub{
+    border-left:2px dashed rgba(28,37,64,0.25);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:10px;
+    background:rgba(28,37,64,0.04);
+  }
+  .stub-time{
+    font-family:'Space Mono',monospace;
+    font-weight:700;
+    font-size:19px;
+  }
+  .stub-label{
+    font-family:'Space Mono',monospace;
+    font-size:9px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    margin-top:4px;
+    text-align:center;
+  }
 
-						<!-- Intro -->
-							<article id="intro">
-								<h2 class="major">Intro</h2>
-								<span class="image main"><img src="images/pic01.jpg" alt="" /></span>
-								<p>Aenean ornare velit lacus, ac varius enim ullamcorper eu. Proin aliquam facilisis ante interdum congue. Integer mollis, nisl amet convallis, porttitor magna ullamcorper, amet egestas mauris. Ut magna finibus nisi nec lacinia. Nam maximus erat id euismod egestas. By the way, check out my <a href="#work">awesome work</a>.</p>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula.</p>
-							</article>
+  footer{
+    text-align:center;
+    margin-top:40px;
+    font-family:'Space Mono',monospace;
+    font-size:11px;
+    color:rgba(242,236,216,0.35);
+    letter-spacing:.06em;
+  }
 
-						<!-- Work -->
-							<article id="work">
-								<h2 class="major">Work</h2>
-								<span class="image main"><img src="images/pic02.jpg" alt="" /></span>
-								<p>Adipiscing magna sed dolor elit. Praesent eleifend dignissim arcu, at eleifend sapien imperdiet ac. Aliquam erat volutpat. Praesent urna nisi, fringila lorem et vehicula lacinia quam. Integer sollicitudin mauris nec lorem luctus ultrices.</p>
-								<p>Nullam et orci eu lorem consequat tincidunt vivamus et sagittis libero. Mauris aliquet magna magna sed nunc rhoncus pharetra. Pellentesque condimentum sem. In efficitur ligula tate urna. Maecenas laoreet massa vel lacinia pellentesque lorem ipsum dolor. Nullam et orci eu lorem consequat tincidunt. Vivamus et sagittis libero. Mauris aliquet magna magna sed nunc rhoncus amet feugiat tempus.</p>
-							</article>
+  @media (max-width:480px){
+    .flap{width:34px; height:48px;}
+    .flap .digit{font-size:24px;}
+    .ticket{grid-template-columns:1fr 96px;}
+    .ticket-route{font-size:21px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Odpočet do odletu</div>
+  <h1>Cesta za sluncem</h1>
+  <div class="route-line"><span class="code">PRG</span> → LHR → MIA → <span class="code">SJO</span> · 12. 11. 2026</div>
 
-						<!-- About -->
-							<article id="about">
-								<h2 class="major">About</h2>
-								<span class="image main"><img src="images/pic03.jpg" alt="" /></span>
-								<p>Lorem ipsum dolor sit amet, consectetur et adipiscing elit. Praesent eleifend dignissim arcu, at eleifend sapien imperdiet ac. Aliquam erat volutpat. Praesent urna nisi, fringila lorem et vehicula lacinia quam. Integer sollicitudin mauris nec lorem luctus ultrices. Aliquam libero et malesuada fames ac ante ipsum primis in faucibus. Cras viverra ligula sit amet ex mollis mattis lorem ipsum dolor sit amet.</p>
-							</article>
+  <div class="board">
+    <div class="board-caption" id="boardCaption">Do prvního odletu</div>
+    <div class="flap-row">
+      <div class="flap-unit">
+        <div class="flap-digits" id="d-days"></div>
+        <div class="flap-label">dny</div>
+      </div>
+      <div class="flap-colon">:</div>
+      <div class="flap-unit">
+        <div class="flap-digits" id="d-hours"></div>
+        <div class="flap-label">hod</div>
+      </div>
+      <div class="flap-colon">:</div>
+      <div class="flap-unit">
+        <div class="flap-digits" id="d-mins"></div>
+        <div class="flap-label">min</div>
+      </div>
+      <div class="flap-colon">:</div>
+      <div class="flap-unit">
+        <div class="flap-digits" id="d-secs"></div>
+        <div class="flap-label">sek</div>
+      </div>
+    </div>
+    <div class="board-status" id="boardStatus"></div>
+  </div>
 
-						<!-- Contact -->
-							<article id="contact">
-								<h2 class="major">Contact</h2>
-								<form method="post" action="#">
-									<div class="fields">
-										<div class="field half">
-											<label for="name">Name</label>
-											<input type="text" name="name" id="name" />
-										</div>
-										<div class="field half">
-											<label for="email">Email</label>
-											<input type="text" name="email" id="email" />
-										</div>
-										<div class="field">
-											<label for="message">Message</label>
-											<textarea name="message" id="message" rows="4"></textarea>
-										</div>
-									</div>
-									<ul class="actions">
-										<li><input type="submit" value="Send Message" class="primary" /></li>
-										<li><input type="reset" value="Reset" /></li>
-									</ul>
-								</form>
-								<ul class="icons">
-									<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-									<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-									<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-									<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
-								</ul>
-							</article>
+  <div class="legs" id="legs"></div>
 
-						<!-- Elements -->
-							<article id="elements">
-								<h2 class="major">Elements</h2>
+  <footer>Časy podle letenky · zobrazeno v místním čase prohlížeče</footer>
+</div>
 
-								<section>
-									<h3 class="major">Text</h3>
-									<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
-									This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
-									This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
-									<hr />
-									<h2>Heading Level 2</h2>
-									<h3>Heading Level 3</h3>
-									<h4>Heading Level 4</h4>
-									<h5>Heading Level 5</h5>
-									<h6>Heading Level 6</h6>
-									<hr />
-									<h4>Blockquote</h4>
-									<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
-									<h4>Preformatted</h4>
-									<pre><code>i = 0;
+<script>
+const legs = [
+  { code:"1", from:"PRG", to:"LHR", fromName:"Praha", toName:"Londýn", dep:"2026-11-12T06:45:00+01:00" },
+  { code:"2", from:"LHR", to:"MIA", fromName:"Londýn", toName:"Miami", dep:"2026-11-12T09:45:00+00:00" },
+  { code:"3", from:"MIA", to:"SJO", fromName:"Miami", toName:"San José", dep:"2026-11-12T18:50:00-05:00" },
+];
 
-while (!deck.isInOrder()) {
-    print 'Iteration ' + i;
-    deck.shuffle();
-    i++;
+function makeFlapDigits(container, count){
+  container.innerHTML = "";
+  const spans = [];
+  for(let i=0;i<count;i++){
+    const f = document.createElement('div');
+    f.className = 'flap';
+    const d = document.createElement('div');
+    d.className = 'digit';
+    d.textContent = '0';
+    f.appendChild(d);
+    container.appendChild(f);
+    spans.push(d);
+  }
+  return spans;
 }
 
-print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
-								</section>
+const daysEls  = makeFlapDigits(document.getElementById('d-days'), 3);
+const hoursEls = makeFlapDigits(document.getElementById('d-hours'), 2);
+const minsEls  = makeFlapDigits(document.getElementById('d-mins'), 2);
+const secsEls  = makeFlapDigits(document.getElementById('d-secs'), 2);
 
-								<section>
-									<h3 class="major">Lists</h3>
+function setDigits(els, value){
+  const str = String(value).padStart(els.length, '0');
+  for(let i=0;i<els.length;i++){
+    if(els[i].textContent !== str[i]){
+      els[i].textContent = str[i];
+    }
+  }
+}
 
-									<h4>Unordered</h4>
-									<ul>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Sagittis adipiscing.</li>
-										<li>Felis enim feugiat.</li>
-									</ul>
+function fmtLocalTime(iso){
+  const dt = new Date(iso);
+  return dt.toLocaleTimeString('cs-CZ', {hour:'2-digit', minute:'2-digit'});
+}
+function fmtLocalDate(iso){
+  const dt = new Date(iso);
+  return dt.toLocaleDateString('cs-CZ', {day:'2-digit', month:'2-digit'});
+}
 
-									<h4>Alternate</h4>
-									<ul class="alt">
-										<li>Dolor pulvinar etiam.</li>
-										<li>Sagittis adipiscing.</li>
-										<li>Felis enim feugiat.</li>
-									</ul>
+const legsContainer = document.getElementById('legs');
+const legEls = legs.map((leg) => {
+  const el = document.createElement('div');
+  el.className = 'ticket';
+  el.innerHTML = `
+    <div class="ticket-main">
+      <div class="ticket-num"><span class="pip"></span>ÚSEK ${leg.code}</div>
+      <div class="ticket-route">${leg.from} <span class="arrow">✈</span> ${leg.to}</div>
+      <div class="ticket-meta">${leg.fromName} → ${leg.toName}</div>
+    </div>
+    <div class="ticket-stub">
+      <div class="stub-time">${fmtLocalTime(leg.dep)}</div>
+      <div class="stub-label">${fmtLocalDate(leg.dep)} · odlet</div>
+    </div>
+  `;
+  legsContainer.appendChild(el);
+  return el;
+});
 
-									<h4>Ordered</h4>
-									<ol>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Etiam vel felis viverra.</li>
-										<li>Felis enim feugiat.</li>
-										<li>Dolor pulvinar etiam.</li>
-										<li>Etiam vel felis lorem.</li>
-										<li>Felis enim et feugiat.</li>
-									</ol>
-									<h4>Icons</h4>
-									<ul class="icons">
-										<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-										<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-										<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-										<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-									</ul>
+function boardCaptionFor(idx){
+  if(idx === -1) return "Všechny úseky odbaveny";
+  const leg = legs[idx];
+  return `Do odletu · ${leg.from} → ${leg.to}`;
+}
 
-									<h4>Actions</h4>
-									<ul class="actions">
-										<li><a href="#" class="button primary">Default</a></li>
-										<li><a href="#" class="button">Default</a></li>
-									</ul>
-									<ul class="actions stacked">
-										<li><a href="#" class="button primary">Default</a></li>
-										<li><a href="#" class="button">Default</a></li>
-									</ul>
-								</section>
+function tick(){
+  const now = new Date();
+  let activeIdx = legs.findIndex(l => new Date(l.dep) > now);
+  if(activeIdx === -1) activeIdx = legs.length; // all past
 
-								<section>
-									<h3 class="major">Table</h3>
-									<h4>Default</h4>
-									<div class="table-wrapper">
-										<table>
-											<thead>
-												<tr>
-													<th>Name</th>
-													<th>Description</th>
-													<th>Price</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Item One</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Two</td>
-													<td>Vis ac commodo adipiscing arcu aliquet.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Three</td>
-													<td> Morbi faucibus arcu accumsan lorem.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Four</td>
-													<td>Vitae integer tempus condimentum.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Five</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan="2"></td>
-													<td>100.00</td>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
+  legEls.forEach((el, i) => {
+    el.classList.remove('active','done');
+    if(i < activeIdx) el.classList.add('done');
+    else if(i === activeIdx) el.classList.add('active');
+  });
 
-									<h4>Alternate</h4>
-									<div class="table-wrapper">
-										<table class="alt">
-											<thead>
-												<tr>
-													<th>Name</th>
-													<th>Description</th>
-													<th>Price</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Item One</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Two</td>
-													<td>Vis ac commodo adipiscing arcu aliquet.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Three</td>
-													<td> Morbi faucibus arcu accumsan lorem.</td>
-													<td>29.99</td>
-												</tr>
-												<tr>
-													<td>Item Four</td>
-													<td>Vitae integer tempus condimentum.</td>
-													<td>19.99</td>
-												</tr>
-												<tr>
-													<td>Item Five</td>
-													<td>Ante turpis integer aliquet porttitor.</td>
-													<td>29.99</td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan="2"></td>
-													<td>100.00</td>
-												</tr>
-											</tfoot>
-										</table>
-									</div>
-								</section>
+  document.getElementById('boardCaption').textContent = boardCaptionFor(activeIdx === legs.length ? -1 : activeIdx);
 
-								<section>
-									<h3 class="major">Buttons</h3>
-									<ul class="actions">
-										<li><a href="#" class="button primary">Primary</a></li>
-										<li><a href="#" class="button">Default</a></li>
-									</ul>
-									<ul class="actions">
-										<li><a href="#" class="button">Default</a></li>
-										<li><a href="#" class="button small">Small</a></li>
-									</ul>
-									<ul class="actions">
-										<li><a href="#" class="button primary icon solid fa-download">Icon</a></li>
-										<li><a href="#" class="button icon solid fa-download">Icon</a></li>
-									</ul>
-									<ul class="actions">
-										<li><span class="button primary disabled">Disabled</span></li>
-										<li><span class="button disabled">Disabled</span></li>
-									</ul>
-								</section>
+  if(activeIdx === legs.length){
+    setDigits(daysEls,0); setDigits(hoursEls,0); setDigits(minsEls,0); setDigits(secsEls,0);
+    document.getElementById('boardStatus').textContent = "Šťastnou cestu do San José! 🌴";
+    return;
+  }
 
-								<section>
-									<h3 class="major">Form</h3>
-									<form method="post" action="#">
-										<div class="fields">
-											<div class="field half">
-												<label for="demo-name">Name</label>
-												<input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
-											</div>
-											<div class="field half">
-												<label for="demo-email">Email</label>
-												<input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
-											</div>
-											<div class="field">
-												<label for="demo-category">Category</label>
-												<select name="demo-category" id="demo-category">
-													<option value="">-</option>
-													<option value="1">Manufacturing</option>
-													<option value="1">Shipping</option>
-													<option value="1">Administration</option>
-													<option value="1">Human Resources</option>
-												</select>
-											</div>
-											<div class="field half">
-												<input type="radio" id="demo-priority-low" name="demo-priority" checked>
-												<label for="demo-priority-low">Low</label>
-											</div>
-											<div class="field half">
-												<input type="radio" id="demo-priority-high" name="demo-priority">
-												<label for="demo-priority-high">High</label>
-											</div>
-											<div class="field half">
-												<input type="checkbox" id="demo-copy" name="demo-copy">
-												<label for="demo-copy">Email me a copy</label>
-											</div>
-											<div class="field half">
-												<input type="checkbox" id="demo-human" name="demo-human" checked>
-												<label for="demo-human">Not a robot</label>
-											</div>
-											<div class="field">
-												<label for="demo-message">Message</label>
-												<textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
-											</div>
-										</div>
-										<ul class="actions">
-											<li><input type="submit" value="Send Message" class="primary" /></li>
-											<li><input type="reset" value="Reset" /></li>
-										</ul>
-									</form>
-								</section>
+  const target = new Date(legs[activeIdx].dep);
+  let diff = Math.max(0, target - now);
 
-							</article>
+  const days = Math.floor(diff / (1000*60*60*24));
+  diff -= days*(1000*60*60*24);
+  const hours = Math.floor(diff / (1000*60*60));
+  diff -= hours*(1000*60*60);
+  const mins = Math.floor(diff / (1000*60));
+  diff -= mins*(1000*60);
+  const secs = Math.floor(diff / 1000);
 
-					</div>
+  setDigits(daysEls, days);
+  setDigits(hoursEls, hours);
+  setDigits(minsEls, mins);
+  setDigits(secsEls, secs);
 
-				<!-- Footer -->
-					<footer id="footer">
-						<p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
-					</footer>
+  document.getElementById('boardStatus').textContent =
+    activeIdx === 0 ? "Zavazadla sbaleny? Check-in začíná." :
+    activeIdx === 1 ? "Přestup v Londýně." :
+    "Poslední přestup, pak už jen Karibik.";
+}
 
-			</div>
-
-		<!-- BG -->
-			<div id="bg"></div>
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
-
-	</body>
+tick();
+setInterval(tick, 1000);
+</script>
+</body>
 </html>
